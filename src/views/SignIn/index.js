@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-community/async-storage';
 import {
   Container,
   InputArea,
@@ -23,6 +24,8 @@ export default () => {
     if(emailField != '' && passwordField != ''){
       let json = await Api.signIn(emailField, passwordField);
       if(json.token){
+        await AsyncStorage.setItem('token', json.token)
+        // userDispatch({ type: 'setNome', payload: { nome: json.usuario.name } })
         navigation.reset({ routes:[{name:'Home'}] });
       }else{
         alert("Email ou senha invalidos!");

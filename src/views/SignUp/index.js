@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-community/async-storage'
 import {
   Container,
   InputArea,
@@ -9,6 +10,8 @@ import {
   SignMessageText,
   SignMessageTextBold,
 } from './styles';
+import { userContext } from '../../contexts/UserContext'
+import Api from '../../Api';
 import KingIcon from '../../../assets/Simbolo.svg';
 import UserIcon from '../../../assets/UserIcon.svg';
 import EmailIcon from '../../../assets/EmailIcon.svg';
@@ -20,8 +23,20 @@ export default () => {
   const [ emailField, setEmailField] = useState('');
   const [ passwordField, setPasswordField] = useState('');
   const navigation = useNavigation();
-  const handleSignClick = () => {
-
+  const { dispatch: userDispatch} = useContext(UserContext)
+  const handleSignClick = async() => {
+    if(nomeField != '' && emailField != '' && passwordField != ''){
+      let json = await Api.signUp(nomeField, emailField, passwordField);
+      if(json.token){
+        await AsyncStorage.setItem('token', json.token)
+        userDispatch({ type: 'setNome', payload: { nome: json.usuario.name } })
+        navigation.reset({ routes:[{name:'Home'}] });
+      }else{
+        alert("Erro ao cadastrar!");
+      }
+    }else{
+      alert("Preencha todos os campos");
+    }
   }
   const handleMessageClick = () => {
     navigation.reset({
