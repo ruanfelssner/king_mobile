@@ -25,8 +25,9 @@ export default () => {
       let json = await Api.signIn(emailField, passwordField);
       if(json.token){
         await AsyncStorage.setItem('token', json.token)
+        console.log('token que foi colocado no storage', json.token)
         // userDispatch({ type: 'setNome', payload: { nome: json.usuario.name } })
-        navigation.reset({ routes:[{name:'Home'}] });
+        navigation.reset({ routes:[{name:'MainTab'}] });
       }else{
         alert("Email ou senha invalidos!");
       }

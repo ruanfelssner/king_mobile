@@ -1,9 +1,10 @@
-import token from './Service'
 import * as axios from 'axios';
+import getLocalToken from './Service'
 const BASE_API = 'https://apiking.herokuapp.com';
 axios.defaults.baseURL = BASE_API
-axios.defaults.headers.common = {'Authorization': `bearer `+token}
-
+     
+getLocalToken()
+// 
 export default {
     checkToken: async (token) => {    
         return await axios.post('login/Token', {token})
@@ -28,9 +29,8 @@ export default {
         .then((res) =>{ return res.data })
         .catch((res) => { return res })
     },
-    getRifas: async() => { 
-        console.log(token)  
-        return await axios.get('rifas')
+    getRifas: async(lat=null, lng=null, address=null) => {
+        return await axios.get('rifas', {lat, lng, address})
         .then((res) =>{ return res.data })
         .catch((res) => { return res })
     }
